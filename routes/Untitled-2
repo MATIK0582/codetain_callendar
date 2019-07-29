@@ -1,0 +1,188 @@
+const express = require('express');
+const router = express.Router();
+const db = require('../config/dataBase');
+const usersData = require('../models/usersDataConstructor');
+const usersAvaliableLeaves = require('../models/usersAvaliableLeavesConstructor');
+const usersLeaves = require('../models/usersLeaves');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+const Joi = require('@hapi/joi');
+
+const schema = Joi.object().keys({
+    name: Joi.string().alphanum().error(new Error('Bad name')),
+    secondName: Joi.string().alphanum().error(new Error('Bad second name')),
+    login: Joi.string().alphanum().error(new Error('Bad login')),
+    password: Joi.string().alphanum().error(new Error('Bad pass')),
+    checkPassword: Joi.string().alphanum().error(new Error('Bad checkpass')),
+    mail: Joi.string().email({ minDomainSegments: 2 }).error(new Error('Bad email'))
+})
+
+function validateRegistration(body){
+    return Joi.validate(body, schema)//, (err, value)=> {
+    if(err) {
+        // console.log(err.message)
+        // console.log(err)
+        // return err.message      
+    }
+    console.log("XXXX" + err.message)
+    // console.log(err)
+    // console.log(value)
+    const ett = { text: err.message}
+    return ett
+}
+    
+
+//Get data from userData table
+router.get('/', (req, res) => 
+    usersData.findAll()
+        .then(test => {
+                console.log(test);
+                res.sendStatus(200);
+            })
+        .catch(err => console.log(err))
+);
+
+//Dispaly calendar
+router.get('/calendar', (req, res) => res.render('calendar'));
+
+//Dispaly form to add leave
+router.get('/calendar/addleave', (req, res) => res.render('add'));
+
+router.get('/login', (req, res) => res.render('login'));
+
+router.get('/register', (req, res) => res.render('register'));
+
+//Add leave to userLeaves table
+router.post('/calendar/addleave', (req, res) =>{
+
+    let {day, month, year, description, leaveType, status} = req.body;
+    
+    if(leaveType === 'on')
+    {
+        leaveType = true;
+    }
+    else
+    {
+        leaveType = false;
+    }
+
+    if(leaveType == true)
+    {
+        status = true;
+    }
+
+    usersLeaves.create({
+        day,
+        month,
+        year,
+        description,
+        leaveType,
+        status
+        // userID = id
+    })
+    .then(res.redirect('/calendar'))
+    .catch(err => console.log(err));
+});
+
+
+router.post('/login', (req, res) => {
+
+    let {login, password} = req.body;
+
+    // crypt password
+
+    usersData.findOne({
+        where: {
+            login,
+            // password
+        }
+    })
+    .then(test => {
+        console.log(test.dataValues.id);
+    })
+    .catch(err => console.log(err))
+
+    res.render('login')
+});
+
+router.post('/register', (req, res) =>{
+
+let errors = [];
+text = validateRegistration(req.body)
+errors.push({ text: text });
+
+    // let { name, secondName, login, password, checkPassword, mail} = req.body;
+    // let errors = [];
+    
+    // const nameResult = Joi.validate({ name: name }, schema, {abortEarly: false});
+    // if(nameResult.error !== null)
+    // {
+    //     console.log("0");
+    //     errors.push({ text: 'Niepoprawny format imienia'});
+    // }
+    // const secondNameResult = Joi.validate({ secondName: secondName }, schema);
+    // if(secondNameResult.error !== null)
+    // {
+    //     console.log("1");
+    //     errors.push({ text: 'Niepoprawny format nazwiska'});
+    // }
+    // const loginResult = Joi.validate({ login: login }, schema);
+    // if(loginResult.error !== null)
+    // {
+    //     console.log("2");
+    //     errors.push({ text: 'Niepoprawny format loginu'});
+    // }
+    // const passwordResult = Joi.validate({ password: password }, schema);
+    // if(passwordResult.error !== null)
+    // {
+    //     console.log("3");
+    //     errors.push({ text: 'Niepoprawny format hasła'});
+    // }
+    // const mailResult = Joi.validate({ mail: mail }, schema);
+    // if(mailResult.error !== null)
+    // {
+    //     console.log("4");
+    //     errors.push({ text: 'Niepoprawny format maila'});
+    // }
+
+    // if(req.bodypassword !== req.body.checkPassword)
+    // {
+    //     console.log("5");
+    //     errors.push({ text: 'Hasła są różne'});
+    // }
+
+
+    const foo = req.body.login;
+    usersData.findOne({
+        where: {
+            login: foo
+        }
+    })
+    .then(usersData => {
+        if(usersData === null)
+        {
+        }
+        else
+        {
+            console.log("6");
+            errors.push({ text: 'Nazwa użytkownika jest już zajęta'});
+        }
+    })
+    .catch(err => console.log(err))
+
+console.log(">>><<<" + errors);
+
+    if(errors.length > 0)
+    {
+        res.render('register', {
+            errors
+        });
+    }
+    else
+    {
+        //Insert into table
+        console.log("Wszystko spoko")
+    }
+});
+
+module.exports = router;

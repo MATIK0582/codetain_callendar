@@ -1,0 +1,20 @@
+<section id="leaves" class="container">
+    <h1>Witaj administratorze</h1>
+
+{{#each tmp}}
+    <div class="leave">
+        <h2>Imie: {{name}} Nazwisko: {{secondName}}</h2>
+    </div>
+    {{#each leaves}}
+        <div class="leave">
+            <h3>Data: {{day}}-{{month}}-{{year}}       Powód: {{description}}   V   X</h3>
+        </div>
+    {{else}}
+    <p>No Data avaliable</p>
+    {{/each}}
+{{else}}
+<p>dupa</p>
+{{/each}}
+
+<p>banan</p>
+</section>

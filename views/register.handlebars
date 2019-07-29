@@ -1,0 +1,49 @@
+<section id="register" class="container">
+        <div class="form-wrap">
+            <h1>Zarejestruj się</h1>
+            {{#each errors}}
+                <div class="error">
+                    <p>{{text}}</p>
+                </div>
+            {{/each}}
+            <form action="/register" method="POST">
+
+                <div class="input-group">
+                    <label for="name">Imię</label>
+                    <input type="text" name="name" id="name" class="input-box" placeholder="eg. Jan"
+                    maxlength="50" value={{name}}>
+                </div>
+                
+                <div class="input-group">
+                    <label for="secondName">Nazwisko</label>
+                    <input type="text" name="secondName" id="secondName" class="input-box" placeholder="eg. Kowalski"
+                    maxlength="50" value={{secondName}}>
+                </div>
+
+                <div class="input-group">
+                    <label for="login">Login</label>
+                    <input type="text" name="login" id="login" class="input-box" placeholder="eg. jkowal"
+                    maxlength="50" value={{login}}>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Hasło</label>
+                    <input type="password" name="password" id="password" class="input-box" maxlength="50" value={{password}}>
+                </div>
+                
+                <div class="input-group">
+                    <label for="checkPassword">Powtórz hasło</label>
+                    <input type="password" name="checkPassword" id="checkPassword" class="input-box" 
+                    maxlength="50" value={{checkPassword}}>
+                </div>
+
+                <div class="input-group">
+                    <label for="mail">Mail</label>
+                    <input type="text" name="mail" id="mail" class="input-box" placeholder="eg. j.kowalski@gmail.com"
+                    maxlength="100" value={{mail}}>
+                </div>
+                
+                <input type="submit" value="Zarejestruj się" class="btn btn-reverse">
+            </form>
+        </div>
+</section>

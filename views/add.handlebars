@@ -1,0 +1,43 @@
+<section id="add" class="container">
+    <div class="form-wrap">
+      <h1>Dodaj urlop</h1>
+      {{!-- {{#each errors}}
+        <div class="error">
+          <p>{{text}}</p>
+        </div>
+      {{/each}} --}}
+      <form action="/calendar/addleave" method="POST">
+        <div class="input-group">
+          <label for="day">Dzień</label>
+          <input type="number" name="day" id="day" class="input-box" placeholder="eg. 28"
+            maxlength="2" value={{day}}>
+        </div>
+
+        <div class="input-group">
+          <label for="month">Miesiąc</label>
+          <input type="number" name="month" id="month" class="input-box" placeholder="eg. 2"
+            maxlength="2" value={{month}}>
+        </div>
+
+        <div class="input-group">
+          <label for="year">Rok</label>
+          <input type="number" name="year" id="year" class="input-box" placeholder="eg. 2019"
+            maxlength="4" value={{year}}>
+        </div>
+
+        <div class="input-group">
+          <label for="description">Przyczyna urlopu</label>
+          <input type="text" name="description" id="description" class="input-box" placeholder="eg. John"
+          maxlength="255" value={{description}}>
+        </div>
+
+        <div class="input-group">
+          <label for="leaveType">Czy urlop na żądanie?</label>
+          <input type="checkbox" name="leaveType" id="leaveType" class="check-box" 
+          {{#if isChecked}}{{leaveType: true}}{{/if}}>
+
+        </div>
+        <input type="submit" value="Dodaj urlop" class="btn btn-reverse">
+      </form>
+    </div>
+  </section>
